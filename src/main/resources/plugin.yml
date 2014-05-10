@@ -1,0 +1,4 @@
+name: ${project.name}
+main: com.github.ucchyocean.bjm.BungeeJapanizeMessenger
+version: ${project.version}
+author: ucchy
