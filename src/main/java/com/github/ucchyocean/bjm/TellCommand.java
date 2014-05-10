@@ -67,17 +67,36 @@ public class TellCommand extends Command {
         for (int i = 1; i < args.length; i++) {
                 str.append(args[i] + " ");
         }
-        String message = str.toString().replace("&", "§").trim();
-        message = Japanizer.japanize(message);
+        String message = str.toString().trim();
+
+        // Japanizeの付加
+        message = Japanizer.japanize(message,
+                parent.getConfig().getJapanizeType(),
+                parent.getConfig().getJapanizeLine1Format());
+
+        // フォーマットの適用
+        String senderServer = "";
+        if ( sender instanceof ProxiedPlayer ) {
+            senderServer = ((ProxiedPlayer)sender).getServer().getInfo().getName();
+        }
+        String result = new String(
+                parent.getConfig().getDefaultFormatForPrivateMessage());
+        result = result.replace("%senderserver", senderServer);
+        result = result.replace("%sender", sender.getName());
+        result = result.replace("%recieverserver",
+                reciever.getServer().getInfo().getName());
+        result = result.replace("%reciever", reciever.getName());
+        result = result.replace("%msg", message);
+
+        // カラーコードの置き換え
+        result = Utility.replaceColorCode(result);
 
         // メッセージ送信
-        sendMessage(sender, ChatColor.LIGHT_PURPLE +
-                "To " + reciever.getName() + ": " + ChatColor.RESET + message);
-        sendMessage(reciever, ChatColor.LIGHT_PURPLE +
-                "From " + sender.getName() + ": " + ChatColor.RESET + message);
+        sendMessage(sender, result);
+        sendMessage(reciever, result);
 
         // 送信履歴を記録
-        parent.putHistory(sender.getName(), reciever.getName());
+        parent.putHistory(reciever.getName(), sender.getName());
     }
 
     /**

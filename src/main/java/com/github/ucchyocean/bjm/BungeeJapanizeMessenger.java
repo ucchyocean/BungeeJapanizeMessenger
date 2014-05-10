@@ -16,6 +16,7 @@ import net.md_5.bungee.api.plugin.Plugin;
 public class BungeeJapanizeMessenger extends Plugin {
 
     private HashMap<String, String> history;
+    private BJMConfig config;
 
     /**
      * プラグインが有効かされたときに呼び出されるメソッド
@@ -28,14 +29,26 @@ public class BungeeJapanizeMessenger extends Plugin {
         history = new HashMap<String, String>();
 
         // コマンド登録
-        getProxy().getPluginManager().registerCommand(this, new TellCommand(this, "tell"));
-        getProxy().getPluginManager().registerCommand(this, new TellCommand(this, "msg"));
-        getProxy().getPluginManager().registerCommand(this, new TellCommand(this, "message"));
-        getProxy().getPluginManager().registerCommand(this, new TellCommand(this, "m"));
-        getProxy().getPluginManager().registerCommand(this, new TellCommand(this, "w"));
-        getProxy().getPluginManager().registerCommand(this, new TellCommand(this, "t"));
-        getProxy().getPluginManager().registerCommand(this, new ReplyCommand(this, "reply"));
-        getProxy().getPluginManager().registerCommand(this, new ReplyCommand(this, "r"));
+        for ( String command : new String[]{
+                "tell", "msg", "message", "m", "w", "t"}) {
+            getProxy().getPluginManager().registerCommand(
+                    this, new TellCommand(this, command));
+        }
+        for ( String command : new String[]{"reply", "r"}) {
+            getProxy().getPluginManager().registerCommand(
+                    this, new ReplyCommand(this, command));
+        }
+
+        // コンフィグ取得
+        config = new BJMConfig(this);
+    }
+
+    /**
+     * コンフィグを返す
+     * @return コンフィグ
+     */
+    public BJMConfig getConfig() {
+        return config;
     }
 
     /**
