@@ -47,9 +47,9 @@
 
   <repositories>
     <repository>
-      <id>spigot-repo</id>
-      <name>Spigot Repository</name>
-      <url>http://repo.md-5.net/content/groups/public</url>
+      <id>sonatype-repo</id>
+      <name>Sonatype Repository</name>
+      <url>https://oss.sonatype.org/content/groups/public/</url>
     </repository>
   </repositories>
 
