@@ -1,16 +1,16 @@
 BungeeJapanizeMessenger
 ========================
 
-BungeeCord �𗘗p���ĕ����T�[�o�[��A�����Ă�����ɂ����āA�T�[�o�[���܂����� tell�R�}���h�̑��M���\�ɂ��܂��B
-�܂��A���b�Z�[�W�̓��e�����[�}���\�L�̏ꍇ�́A�����ɕϊ����ĕ\�����邱�Ƃ��\�ł��B
+BungeeCord を利用して複数サーバーを連結している環境において、サーバーをまたいだ tellコマンドの送信を可能にします。
+また、メッセージの内容がローマ字表記の場合は、漢字に変換して表示することが可能です。
 
-<img src="https://github.com/ucchyocean/BungeeJapanizeMessenger/blob/master/release/bjm.png?raw=true" alt="�X�N���[���V���b�g" width=427 height=240></img>
+<img src="https://github.com/ucchyocean/BungeeJapanizeMessenger/blob/master/release/bjm.png?raw=true" alt="スクリーンショット" width=427 height=240></img>
 
 
-�� �g�p���@�F<b>BungeeCord��plugins�t�H���_</b>�ɁAjar�t�@�C�������Ă��������B<br/>
-<b>Bukkit��plugins�t�H���_�ł͂���܂���I</b>
+※ 使用方法：<b>BungeeCordのpluginsフォルダ</b>に、jarファイルを入れてください。<br/>
+<b>Bukkitのpluginsフォルダではありません！</b>
 
-�� �R���t�B�O�Fplugins/BungeeJapanizeMessenger/config.yml �ɐ�������܂��B
+※ コンフィグ：plugins/BungeeJapanizeMessenger/config.yml に生成されます。
 <pre>
 # BungeeJapanizeMessenger v0.0.1
 # @author     ucchy
@@ -18,49 +18,49 @@ BungeeCord �𗘗p���ĕ����T�[�o�[��A�����Ă�����ɂ����āA�T�[�o�[���܂����� 
 # @copyright  Copyright ucchy 2013
 
 
-# -------------------- Japanize�ϊ��ݒ� --------------------
+# -------------------- Japanize変換設定 --------------------
 
-# ���[�}�������ȕ����⊿���ɕϊ�����ݒ�B
-# none/kana/GoogleIME/SocialIME ��4�̂����ꂩ���ݒ�\�B
-# none      : �ϊ��Ȃ��B
-# kana      : ���ȕϊ��̂݁B
-# GoogleIME : ���ȕϊ������̂��AGoogleIME���g���Ċ����ϊ�����B
-# SocialIME : ���ȕϊ������̂��ASocialIME���g���Ċ����ϊ�����B
+# ローマ字をかな文字や漢字に変換する設定。
+# none/kana/GoogleIME/SocialIME の4つのいずれかが設定可能。
+# none      : 変換なし。
+# kana      : かな変換のみ。
+# GoogleIME : かな変換したのち、GoogleIMEを使って漢字変換する。
+# SocialIME : かな変換したのち、SocialIMEを使って漢字変換する。
 japanizeType: GoogleIME
 
-# Japanize�ϊ����ꂽ���b�Z�[�W�����́A�\���t�H�[�}�b�g�ݒ�B
-# Japanize�ϊ�����Ȃ����b�Z�[�W�i2�o�C�g�������܂ނȂǁj�̏ꍇ�́A�K�p����܂���B
+# Japanize変換されたメッセージ部分の、表示フォーマット設定。
+# Japanize変換されないメッセージ（2バイト文字を含むなど）の場合は、適用されません。
 japanizeLine1Format: '%msg &7(%japanize)'
 
 
-# -------------------- tell�R�}���h�ݒ� --------------------
+# -------------------- tellコマンド設定 --------------------
 
-# /tell �� /msg �� /r �R�}���h�Ńv���C�x�[�g���b�Z�[�W�𑗐M����Ƃ��ɁA
-# �K�p�����t�H�[�}�b�g�ݒ�B
+# /tell や /msg や /r コマンドでプライベートメッセージを送信するときに、
+# 適用されるフォーマット設定。
 defaultFormatForPrivateMessage: '&7[%sender@%senderserver > %reciever@%recieverserver] %msg'
 
 
-# -------------------- �L��`���b�g�ݒ� --------------------
+# -------------------- 広域チャット設定 --------------------
 
-# �ʏ�̃`���b�g�������A���̃T�[�o�[�ɂ����M���邩�ǂ����B
-# ���ӁFLunaChat�ȂǂŁA�T�[�o�[���[�J���Ƀ`�����l���`���b�g��ݒ肵�Ă���ꍇ�A
-#       �`�����l���`���b�g�ւ̔������e���A�S�đ��̃T�[�o�[�ɑ��M����Ă��܂��܂��B
+# 通常のチャット発言を、他のサーバーにも送信するかどうか。
+# 注意：LunaChatなどで、サーバーローカルにチャンネルチャットを設定している場合、
+#       チャンネルチャットへの発言内容も、全て他のサーバーに送信されてしまいます。
 broadcastChat: false
 
-# broadcastChat �� true �̂Ƃ��ɁA
-# ���̃T�[�o�[�ŕ\�������`���b�g�t�H�[�}�b�g�̐ݒ�B
+# broadcastChat が true のときに、
+# 他のサーバーで表示されるチャットフォーマットの設定。
 broadcastChatFormat: '&d<%sender@%senderserver> &f%msg'
 
-# broadcastChat �� true �̂Ƃ��ɁA
-# �����҂̃T�[�o�[�ɂ��Ă��AJapanize�ϊ����s�����ǂ����B
-# �e�T�[�o�[�ŁALunaChat�Ȃ�Japanize�ϊ����s���v���O�C�����g�p�������ꍇ�́A
-# false �ɂ��Ă��������B
+# broadcastChat が true のときに、
+# 発言者のサーバーについても、Japanize変換を行うかどうか。
+# 各サーバーで、LunaChatなどJapanize変換を行うプラグインを使用したい場合は、
+# false にしてください。
 broadcastChatLocalJapanize: true
 </pre>
 
-�� ���C�Z���X�FLGPLv3��K�p���܂��B�\�[�X�R�[�h�𗬗p����ꍇ�́A���p��ɂ�LGPLv3��K�p���Ă��������B
+※ ライセンス：LGPLv3を適用します。ソースコードを流用する場合は、流用先にもLGPLv3を適用してください。
 
-�� �����������Ƃ��̘A����F<a href="https://twitter.com/ucchy99">�c�C�b�^�[</a>�֘A�����������B
+※ 何かあったときの連絡先：<a href="https://twitter.com/ucchy99">ツイッター</a>へ連絡ください。
 
-�� �_�E�����[�h�F<br/>
+※ ダウンロード：<br/>
 https://github.com/ucchyocean/BungeeJapanizeMessenger/blob/master/release/BungeeJapanizeMessenger.zip?raw=true
