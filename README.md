@@ -12,10 +12,10 @@ BungeeCord を利用して複数サーバーを連結している環境におい
 
 ※ コンフィグ：plugins/BungeeJapanizeMessenger/config.yml に生成されます。
 <pre>
-# BungeeJapanizeMessenger v0.0.1
+# BungeeJapanizeMessenger v0.0.2
 # @author     ucchy
 # @license    LGPLv3
-# @copyright  Copyright ucchy 2013
+# @copyright  Copyright ucchy 2014
 
 
 # -------------------- Japanize変換設定 --------------------
@@ -49,7 +49,7 @@ broadcastChat: false
 
 # broadcastChat が true のときに、
 # 他のサーバーで表示されるチャットフォーマットの設定。
-broadcastChatFormat: '&d<%sender@%senderserver> &f%msg'
+broadcastChatFormat: '&d&lt;%sender@%senderserver> &f%msg'
 
 # broadcastChat が true のときに、
 # 発言者のサーバーについても、Japanize変換を行うかどうか。
