@@ -23,6 +23,9 @@ public class BJMConfig {
     private String defaultFormatForPrivateMessage;
     private JapanizeType japanizeType;
     private String japanizeLine1Format;
+    private boolean broadcastChat;
+    private String broadcastChatFormat;
+    private boolean broadcastChatLocalJapanize;
 
     /**
      * コンストラクタ
@@ -62,18 +65,16 @@ public class BJMConfig {
                 japanizeType = JapanizeType.GOOGLE_IME;
             }
 
-//            japanizeDisplayLine =
-//                    config.getInt("japanizeDisplayLine", 1);
-//            if ( japanizeDisplayLine <= 0 ) {
-//                japanizeDisplayLine = 1;
-//            } else if ( japanizeDisplayLine >= 3 ) {
-//                japanizeDisplayLine = 2;
-//            }
-
             japanizeLine1Format =
                     config.getString("japanizeLine1Format", japanizeLine1Format);
-//            japanizeLine2Format =
-//                    config.getString("japanizeLine2Format", japanizeLine2Format);
+
+            broadcastChat = config.getBoolean("broadcastChat", broadcastChat);
+
+            broadcastChatFormat =
+                    config.getString("broadcastChatFormat", broadcastChatFormat);
+
+            broadcastChatLocalJapanize =
+                    config.getBoolean("broadcastChatLocalJapanize", broadcastChatLocalJapanize);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -85,11 +86,13 @@ public class BJMConfig {
      */
     private void initByDefault() {
 
-        defaultFormatForPrivateMessage = "&7[%player > %to] %msg";
+        defaultFormatForPrivateMessage =
+                "&7[%sender@%senderserver > %reciever@%recieverserver] %msg";
         japanizeType = JapanizeType.GOOGLE_IME;
-//        japanizeDisplayLine = 1;
         japanizeLine1Format = "%msg &7(%japanize)";
-//        japanizeLine2Format = "&6[JP] %japanize";
+        broadcastChat = false;
+        broadcastChatFormat = "&d<%sender@%senderserver> &f&msg";
+        broadcastChatLocalJapanize = true;
     }
 
     /**
@@ -111,5 +114,26 @@ public class BJMConfig {
      */
     public String getJapanizeLine1Format() {
         return japanizeLine1Format;
+    }
+
+    /**
+     * @return broadcastChat
+     */
+    public boolean isBroadcastChat() {
+        return broadcastChat;
+    }
+
+    /**
+     * @return broadcastChatFormat
+     */
+    public String getBroadcastChatFormat() {
+        return broadcastChatFormat;
+    }
+
+    /**
+     * @return broadcastChatLocalJapanize
+     */
+    public boolean isBroadcastChatLocalJapanize() {
+        return broadcastChatLocalJapanize;
     }
 }

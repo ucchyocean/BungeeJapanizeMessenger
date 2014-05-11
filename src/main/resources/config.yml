@@ -3,9 +3,8 @@
 # @license    LGPLv3
 # @copyright  Copyright ucchy 2013
 
-# /tell や /msg や /r コマンドでプライベートメッセージを送信するときに、
-# 適用されるフォーマット設定。
-defaultFormatForPrivateMessage: '&7[%sender@%senderserver > %reciever@%recieverserver] %msg'
+
+# -------------------- Japanize変換設定 --------------------
 
 # ローマ字をかな文字や漢字に変換する設定。
 # none/kana/GoogleIME/SocialIME の4つのいずれかが設定可能。
@@ -16,4 +15,30 @@ defaultFormatForPrivateMessage: '&7[%sender@%senderserver > %reciever@%recievers
 japanizeType: GoogleIME
 
 # Japanize変換されたメッセージ部分の、表示フォーマット設定。
+# Japanize変換されないメッセージ（2バイト文字を含むなど）の場合は、適用されません。
 japanizeLine1Format: '%msg &7(%japanize)'
+
+
+# -------------------- tellコマンド設定 --------------------
+
+# /tell や /msg や /r コマンドでプライベートメッセージを送信するときに、
+# 適用されるフォーマット設定。
+defaultFormatForPrivateMessage: '&7[%sender@%senderserver > %reciever@%recieverserver] %msg'
+
+
+# -------------------- 広域チャット設定 --------------------
+
+# 通常のチャット発言を、他のサーバーにも送信するかどうか。
+# 注意：LunaChatなどで、サーバーローカルにチャンネルチャットを設定している場合、
+#       チャンネルチャットへの発言内容も、全て他のサーバーに送信されてしまいます。
+broadcastChat: false
+
+# broadcastChat が true のときに、
+# 他のサーバーで表示されるチャットフォーマットの設定。
+broadcastChatFormat: '&d<%sender@%senderserver> &f%msg'
+
+# broadcastChat が true のときに、
+# 発言者のサーバーについても、Japanize変換を行うかどうか。
+# 各サーバーで、LunaChatなどJapanize変換を行うプラグインを使用したい場合は、
+# false にしてください。
+broadcastChatLocalJapanize: true
