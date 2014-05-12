@@ -1,11 +1,16 @@
 BungeeJapanizeMessenger
 ========================
 
-BungeeCord を利用して複数サーバーを連結している環境において、サーバーをまたいだ tellコマンドの送信を可能にします。
+BungeeCord を利用して複数サーバーを連結している環境において、サーバーをまたいだチャットやプライベートメッセージの送信を可能にします。
 また、メッセージの内容がローマ字表記の場合は、漢字に変換して表示することが可能です。
 
 <img src="https://github.com/ucchyocean/BungeeJapanizeMessenger/blob/master/release/bjm.png?raw=true" alt="スクリーンショット" width=427 height=240></img>
 
+
+※特徴：
+* /tell、/t、/msg、/message、/m、/w コマンドを置き換えて、会話相手のプレイヤーが別サーバーにいてもメッセージが送信できるようにします。
+* /r または /reply コマンドで、/tell コマンドの返信を送信することができます。
+* 広域チャット設定をオンにすると、全てのチャットメッセージを全サーバーに表示することができます。
 
 ※ 使用方法：<b>BungeeCordのpluginsフォルダ</b>に、jarファイルを入れてください。<br/>
 <b>Bukkitのpluginsフォルダではありません！</b>
