@@ -2,8 +2,8 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.github.ucchyocean</groupId>
   <artifactId>BungeeJapanizeMessenger</artifactId>
-  <version>0.0.2</version>
-  <description>Points system plugin for PVP</description>
+  <version>1.0.0</version>
+  <description>Japanize Chat System for BungeeCord</description>
 
   <licenses>
     <license>
@@ -42,6 +42,25 @@
           <target>1.6</target>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>2.2.1</version>
+        <configuration>
+          <finalName>${project.artifactId}-${project.version}</finalName>
+          <descriptors>
+            <descriptor>distribution.xml</descriptor>
+          </descriptors>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>deploy</phase>
+            <goals>
+              <goal>assembly</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 
@@ -57,8 +76,7 @@
     <dependency>
       <groupId>net.md-5</groupId>
       <artifactId>bungeecord-api</artifactId>
-      <version>1.7-SNAPSHOT</version>
+      <version>1.8-SNAPSHOT</version>
     </dependency>
   </dependencies>
-
 </project>

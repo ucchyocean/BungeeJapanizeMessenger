@@ -7,6 +7,8 @@ package com.github.ucchyocean.bjm;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
@@ -22,10 +24,14 @@ public class BJMConfig {
 
     private String defaultFormatForPrivateMessage;
     private JapanizeType japanizeType;
+    private int japanizeDisplayLine;
     private String japanizeLine1Format;
+    private String japanizeLine2Format;
+    private String noneJapanizeMarker;
     private boolean broadcastChat;
     private String broadcastChatFormat;
     private boolean broadcastChatLocalJapanize;
+    private ArrayList<Pattern> ngwordCompiled;
 
     /**
      * コンストラクタ
@@ -47,7 +53,6 @@ public class BJMConfig {
         }
 
         // コンフィグ取得
-        initByDefault();
         ConfigurationProvider provider =
                 ConfigurationProvider.getProvider(YamlConfiguration.class);
         try {
@@ -55,44 +60,41 @@ public class BJMConfig {
 
             defaultFormatForPrivateMessage =
                     config.getString("defaultFormatForPrivateMessage",
-                            defaultFormatForPrivateMessage);
+                            "&7[%sender@%senderserver > %reciever@%recieverserver] %msg");
 
-            String temp =
-                    config.getString("japanizeType", japanizeType.toString());
-            temp = temp.toUpperCase();
-            japanizeType = JapanizeType.fromID(temp);
-            if ( japanizeType == null ) {
-                japanizeType = JapanizeType.GOOGLE_IME;
+            japanizeType = JapanizeType.fromID(
+                    config.getString("japanizeType"), JapanizeType.GOOGLE_IME);
+
+            japanizeDisplayLine =
+                    config.getInt("japanizeDisplayLine", 1);
+            if ( japanizeDisplayLine != 1 && japanizeDisplayLine != 2 ) {
+                japanizeDisplayLine = 1;
             }
 
             japanizeLine1Format =
-                    config.getString("japanizeLine1Format", japanizeLine1Format);
+                    config.getString("japanizeLine1Format", "%msg &6(%japanize)");
+            japanizeLine2Format =
+                    config.getString("japanizeLine2Format", "&6[JP] %japanize");
 
-            broadcastChat = config.getBoolean("broadcastChat", broadcastChat);
+            noneJapanizeMarker = config.getString("noneJapanizeMarker", "#");
+
+            broadcastChat = config.getBoolean("broadcastChat", true);
 
             broadcastChatFormat =
-                    config.getString("broadcastChatFormat", broadcastChatFormat);
+                    config.getString("broadcastChatFormat",
+                            "%date %time &d<%sender@%senderserver> &f%msg");
 
             broadcastChatLocalJapanize =
-                    config.getBoolean("broadcastChatLocalJapanize", broadcastChatLocalJapanize);
+                    config.getBoolean("broadcastChatLocalJapanize", true);
+
+            ngwordCompiled = new ArrayList<Pattern>();
+            for ( String word : config.getStringList("ngword") ) {
+                ngwordCompiled.add(Pattern.compile(word));
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * 全てのコンフィグを初期値で初期化する
-     */
-    private void initByDefault() {
-
-        defaultFormatForPrivateMessage =
-                "&7[%sender@%senderserver > %reciever@%recieverserver] %msg";
-        japanizeType = JapanizeType.GOOGLE_IME;
-        japanizeLine1Format = "%msg &7(%japanize)";
-        broadcastChat = false;
-        broadcastChatFormat = "&d<%sender@%senderserver> &f&msg";
-        broadcastChatLocalJapanize = true;
     }
 
     /**
@@ -110,10 +112,31 @@ public class BJMConfig {
     }
 
     /**
+     * @return japanizeDisplayLine
+     */
+    public int getJapanizeDisplayLine() {
+        return japanizeDisplayLine;
+    }
+
+    /**
      * @return japanizeLine1Format
      */
     public String getJapanizeLine1Format() {
         return japanizeLine1Format;
+    }
+
+    /**
+     * @return japanizeLine2Format
+     */
+    public String getJapanizeLine2Format() {
+        return japanizeLine2Format;
+    }
+
+    /**
+     * @return noneJapanizeMarker
+     */
+    public String getNoneJapanizeMarker() {
+        return noneJapanizeMarker;
     }
 
     /**
@@ -135,5 +158,12 @@ public class BJMConfig {
      */
     public boolean isBroadcastChatLocalJapanize() {
         return broadcastChatLocalJapanize;
+    }
+
+    /**
+     * @return ngwordCompiled
+     */
+    public ArrayList<Pattern> getNgwordCompiled() {
+        return ngwordCompiled;
     }
 }

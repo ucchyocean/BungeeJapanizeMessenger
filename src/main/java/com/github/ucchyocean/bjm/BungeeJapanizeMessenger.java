@@ -5,7 +5,13 @@
  */
 package com.github.ucchyocean.bjm;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -24,11 +30,18 @@ import com.github.ucchyocean.lc.japanize.Japanizer;
  */
 public class BungeeJapanizeMessenger extends Plugin implements Listener {
 
+    private static final String DATE_FORMAT_PATTERN = "yyyy/MM/dd";
+    private static final String TIME_FORMAT_PATTERN = "HH:mm:ss";
+
+    private SimpleDateFormat dateFormat;
+    private SimpleDateFormat timeFormat;
+
     private HashMap<String, String> history;
     private BJMConfig config;
+    private JapanizeDictionary dictionary;
 
     /**
-     * プラグインが有効かされたときに呼び出されるメソッド
+     * プラグインが有効化されたときに呼び出されるメソッド
      * @see net.md_5.bungee.api.plugin.Plugin#onEnable()
      */
     @Override
@@ -36,6 +49,8 @@ public class BungeeJapanizeMessenger extends Plugin implements Listener {
 
         // 初期化
         history = new HashMap<String, String>();
+        dateFormat = new SimpleDateFormat(DATE_FORMAT_PATTERN);
+        timeFormat = new SimpleDateFormat(TIME_FORMAT_PATTERN);
 
         // コマンド登録
         for ( String command : new String[]{
@@ -47,9 +62,16 @@ public class BungeeJapanizeMessenger extends Plugin implements Listener {
             getProxy().getPluginManager().registerCommand(
                     this, new ReplyCommand(this, command));
         }
+        for ( String command : new String[]{"dictionary", "dic"}) {
+            getProxy().getPluginManager().registerCommand(
+                    this, new DictionaryCommand(this, command));
+        }
 
         // コンフィグ取得
         config = new BJMConfig(this);
+
+        // 辞書取得
+        dictionary = new JapanizeDictionary(this);
 
         // リスナー登録
         getProxy().getPluginManager().registerListener(this, this);
@@ -64,23 +86,35 @@ public class BungeeJapanizeMessenger extends Plugin implements Listener {
     }
 
     /**
-     * プライベートメッセージの送信履歴を記録する
-     * @param sender 送信者
-     * @param reciever 受信者
+     * 辞書を返す
+     * @return 辞書
      */
-    protected void putHistory(String sender, String reciever) {
-        history.put(sender, reciever);
+    public JapanizeDictionary getDictionary() {
+        return dictionary;
     }
 
     /**
-     * プライベートメッセージの送信履歴を取得する
+     * プライベートメッセージの受信履歴を記録する
+     * @param reciever 受信者
      * @param sender 送信者
-     * @return 受信者
      */
-    protected String getHistory(String sender) {
-        return history.get(sender);
+    protected void putHistory(String reciever, String sender) {
+        history.put(reciever, sender);
     }
 
+    /**
+     * プライベートメッセージの受信履歴を取得する
+     * @param reciever 受信者
+     * @return 送信者
+     */
+    protected String getHistory(String reciever) {
+        return history.get(reciever);
+    }
+
+    /**
+     * プレイヤーがチャット発言した時に呼び出されるメソッド
+     * @param event
+     */
     @EventHandler
     public void onChat(ChatEvent event) {
 
@@ -99,18 +133,47 @@ public class BungeeJapanizeMessenger extends Plugin implements Listener {
             return;
         }
 
-        // 発言者と発言サーバーの取得
-        ProxiedPlayer sender = (ProxiedPlayer)event.getSender();
+        // 発言者と発言サーバーと発言内容の取得
+        final ProxiedPlayer sender = (ProxiedPlayer)event.getSender();
         String senderServer = sender.getServer().getInfo().getName();
+        String message = event.getMessage();
 
-        // メッセージのjapanize変換
-        String message = Japanizer.japanize(event.getMessage(),
-                config.getJapanizeType(), config.getJapanizeLine1Format());
+        // NGワードのマスク
+        message = maskNGWord(message, config.getNgwordCompiled());
+
+        // Japanizeの付加
+        if ( message.startsWith(config.getNoneJapanizeMarker()) ) {
+
+            message = message.substring(config.getNoneJapanizeMarker().length());
+
+        } else {
+
+            String japanize = Japanizer.japanize(message, config.getJapanizeType(),
+                    dictionary.getDictionary());
+            if ( japanize.length() > 0 ) {
+
+                // NGワードのマスク
+                japanize = maskNGWord(japanize, config.getNgwordCompiled());
+
+                // フォーマット化してメッセージを上書きする
+                String japanizeFormat = config.getJapanizeDisplayLine() == 1 ?
+                        config.getJapanizeLine1Format() :
+                        "%msg\n" + config.getJapanizeLine2Format();
+                String preMessage = new String(message);
+                message = japanizeFormat.replace("%msg", preMessage).replace("%japanize", japanize);
+            }
+        }
 
         // フォーマットの置き換え処理
         String result = config.getBroadcastChatFormat();
         result = result.replace("%senderserver", senderServer);
         result = result.replace("%sender", sender.getName());
+        if ( result.contains("%date") ) {
+            result = result.replace("%date", dateFormat.format(new Date()));
+        }
+        if ( result.contains("%time") ) {
+            result = result.replace("%time", timeFormat.format(new Date()));
+        }
         result = result.replace("%msg", message);
         result = Utility.replaceColorCode(result);
 
@@ -130,8 +193,44 @@ public class BungeeJapanizeMessenger extends Plugin implements Listener {
 
         // ローカルも置き換える処理なら、置換えを行う
         if ( config.isBroadcastChatLocalJapanize() ) {
-            event.setMessage(message);
+
+            // NOTE: 改行がサポートされないので、改行を含む場合は、
+            // \nで分割して前半をセットし、後半は150ミリ秒後に送信する。
+            if ( !message.contains("\n") ) {
+                event.setMessage(Utility.removeColorCode(message));
+            } else {
+                int index = message.indexOf("\n");
+                String pre = message.substring(0, index);
+                final String post = Utility.replaceColorCode(
+                        message.substring(index + "\n".length()));
+                event.setMessage(Utility.removeColorCode(pre));
+                getProxy().getScheduler().schedule(this, new Runnable() {
+                    @Override
+                    public void run() {
+                        for ( ProxiedPlayer p : sender.getServer().getInfo().getPlayers() ) {
+                            sendMessage(p, post);
+                        }
+                    }
+                }, 150, TimeUnit.MILLISECONDS);
+            }
         }
+    }
+
+    /**
+     * NGワードをマスクする
+     * @param message メッセージ
+     * @param ngwords NGワード
+     * @return マスクされたメッセージ
+     */
+    private String maskNGWord(String message, ArrayList<Pattern> ngwords) {
+        for ( Pattern pattern : ngwords ) {
+            Matcher matcher = pattern.matcher(message);
+            if ( matcher.find() ) {
+                message = matcher.replaceAll(
+                        Utility.getAstariskString(matcher.group(0).length()));
+            }
+        }
+        return message;
     }
 
     /**
@@ -139,7 +238,8 @@ public class BungeeJapanizeMessenger extends Plugin implements Listener {
      * @param reciever 送信先
      * @param message メッセージ
      */
-    private void sendMessage(CommandSender reciever, String message) {
+    protected void sendMessage(CommandSender reciever, String message) {
+        if ( message == null ) return;
         reciever.sendMessage(TextComponent.fromLegacyText(message));
     }
 }

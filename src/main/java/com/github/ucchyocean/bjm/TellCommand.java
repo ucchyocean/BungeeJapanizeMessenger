@@ -5,6 +5,10 @@
  */
 package com.github.ucchyocean.bjm;
 
+import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -23,7 +27,7 @@ public class TellCommand extends Command {
 
     /**
      * コンストラクタ
-     * @param BungeeJapanizeMessenger
+     * @param parent
      * @param name コマンド
      */
     public TellCommand(BungeeJapanizeMessenger parent, String name) {
@@ -69,10 +73,45 @@ public class TellCommand extends Command {
         }
         String message = str.toString().trim();
 
+        // 送信
+        sendPrivateMessage(sender, reciever, message);
+    }
+
+    /**
+     * プライベートメッセージを送信する
+     * @param sender 送信者
+     * @param receiver 受信者名
+     * @param message メッセージ
+     */
+    protected void sendPrivateMessage(CommandSender sender, ProxiedPlayer reciever, String message) {
+
+        BJMConfig config = parent.getConfig();
+
+        // NGワードのマスク
+        message = maskNGWord(message, config.getNgwordCompiled());
+
         // Japanizeの付加
-        message = Japanizer.japanize(message,
-                parent.getConfig().getJapanizeType(),
-                parent.getConfig().getJapanizeLine1Format());
+        if ( message.startsWith(config.getNoneJapanizeMarker()) ) {
+
+            message = message.substring(config.getNoneJapanizeMarker().length());
+
+        } else {
+
+            String japanize = Japanizer.japanize(message, config.getJapanizeType(),
+                    parent.getDictionary().getDictionary());
+            if ( japanize.length() > 0 ) {
+
+                // NGワードのマスク
+                japanize = maskNGWord(japanize, config.getNgwordCompiled());
+
+                // フォーマット化してメッセージを上書きする
+                String japanizeFormat = config.getJapanizeDisplayLine() == 1 ?
+                        config.getJapanizeLine1Format() :
+                        "%msg\n" + config.getJapanizeLine2Format();
+                String preMessage = new String(message);
+                message = japanizeFormat.replace("%msg", preMessage).replace("%japanize", japanize);
+            }
+        }
 
         // フォーマットの適用
         String senderServer = "";
@@ -100,11 +139,29 @@ public class TellCommand extends Command {
     }
 
     /**
+     * NGワードをマスクする
+     * @param message メッセージ
+     * @param ngwords NGワード
+     * @return マスクされたメッセージ
+     */
+    private String maskNGWord(String message, ArrayList<Pattern> ngwords) {
+        for ( Pattern pattern : ngwords ) {
+            Matcher matcher = pattern.matcher(message);
+            if ( matcher.find() ) {
+                message = matcher.replaceAll(
+                        Utility.getAstariskString(matcher.group(0).length()));
+            }
+        }
+        return message;
+    }
+
+    /**
      * 指定した対象にメッセージを送信する
      * @param reciever 送信先
      * @param message メッセージ
      */
-    private void sendMessage(CommandSender reciever, String message) {
+    protected void sendMessage(CommandSender reciever, String message) {
+        if ( message == null ) return;
         reciever.sendMessage(TextComponent.fromLegacyText(message));
     }
 }

@@ -7,17 +7,13 @@ package com.github.ucchyocean.bjm;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.plugin.Command;
-
-import com.github.ucchyocean.lc.japanize.Japanizer;
 
 /**
  * BungeeJapanizeMessengerのreplyコマンド実装クラス
  * @author ucchy
  */
-public class ReplyCommand extends Command {
+public class ReplyCommand extends TellCommand {
 
     private BungeeJapanizeMessenger parent;
 
@@ -27,7 +23,7 @@ public class ReplyCommand extends Command {
      * @param name コマンド
      */
     public ReplyCommand(BungeeJapanizeMessenger parent, String name) {
-        super(name);
+        super(parent, name);
         this.parent = parent;
     }
 
@@ -40,12 +36,13 @@ public class ReplyCommand extends Command {
     @Override
     public void execute(CommandSender sender, String[] args) {
 
+        String recieverName = parent.getHistory(sender.getName());
+
         // 引数が無いときは、現在の会話相手を表示して終了する。
         if ( args.length == 0 ) {
-            String reciever = parent.getHistory(sender.getName());
-            if ( reciever != null ) {
+            if ( recieverName != null ) {
                 sendMessage(sender, ChatColor.LIGHT_PURPLE +
-                        "現在の会話相手： " + reciever);
+                        "現在の会話相手： " + recieverName);
             } else {
                 sendMessage(sender, ChatColor.LIGHT_PURPLE +
                         "現在の会話相手は設定されていません。");
@@ -54,11 +51,16 @@ public class ReplyCommand extends Command {
         }
 
         // 送信先プレイヤーの取得。取得できないならエラーを表示して終了する。
+        if ( recieverName == null ) {
+            sendMessage(sender, ChatColor.RED +
+                    "メッセージ送信先が見つかりません。");
+            return;
+        }
         ProxiedPlayer reciever = parent.getProxy().getPlayer(
                 parent.getHistory(sender.getName()));
         if ( reciever == null ) {
             sendMessage(sender, ChatColor.RED +
-                    "メッセージ送信先が見つかりません。");
+                    "メッセージ送信先" + recieverName + "が見つかりません。");
             return;
         }
 
@@ -69,42 +71,7 @@ public class ReplyCommand extends Command {
         }
         String message = str.toString().trim();
 
-        // Japanizeの付加
-        message = Japanizer.japanize(message,
-                parent.getConfig().getJapanizeType(),
-                parent.getConfig().getJapanizeLine1Format());
-
-        // フォーマットの適用
-        String senderServer = "";
-        if ( sender instanceof ProxiedPlayer ) {
-            senderServer = ((ProxiedPlayer)sender).getServer().getInfo().getName();
-        }
-        String result = new String(
-                parent.getConfig().getDefaultFormatForPrivateMessage());
-        result = result.replace("%senderserver", senderServer);
-        result = result.replace("%sender", sender.getName());
-        result = result.replace("%recieverserver",
-                reciever.getServer().getInfo().getName());
-        result = result.replace("%reciever", reciever.getName());
-        result = result.replace("%msg", message);
-
-        // カラーコードの置き換え
-        result = Utility.replaceColorCode(result);
-
-        // メッセージ送信
-        sendMessage(sender, result);
-        sendMessage(reciever, result);
-
-        // 送信履歴を記録
-        parent.putHistory(reciever.getName(), sender.getName());
-    }
-
-    /**
-     * 指定した対象にメッセージを送信する
-     * @param reciever 送信先
-     * @param message メッセージ
-     */
-    private void sendMessage(CommandSender reciever, String message) {
-        reciever.sendMessage(TextComponent.fromLegacyText(message));
+        // 送信
+        sendPrivateMessage(sender, reciever, message);
     }
 }

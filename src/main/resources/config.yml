@@ -14,15 +14,43 @@
 # SocialIME : かな変換したのち、SocialIMEを使って漢字変換する。
 japanizeType: GoogleIME
 
-# Japanize変換されたメッセージ部分の、表示フォーマット設定。
-# Japanize変換されないメッセージ（2バイト文字を含むなど）の場合は、適用されません。
-japanizeLine1Format: '%msg &7(%japanize)'
+# かな変換や漢字変換時に、
+# 変換結果を元の発言内容と合わせて1行で表示するか、
+# 変換結果のみを2行目に表示するかを、設定する。
+# 1行表示の例：
+#     <ucchy> aiueo (あいうえお)
+# 2行表示の例：
+#     <ucchy> aiueo
+#     [JP] あいうえお
+japanizeDisplayLine: 1
+
+# japanizeDisplayLine が 1 のときの、表示フォーマットを設定する。
+# フォーマット設定には、下記のキーワードが使用できます。
+# %msg      : 元の発言内容
+# %japanize : Japanize変換された発言内容
+japanizeLine1Format: '%msg &6(%japanize)'
+
+# japanizeDisplayLine が 2 のときの、2行目の表示フォーマットを設定する。
+# フォーマット設定には、下記のキーワードが使用できます。
+# %msg      : 元の発言内容
+# %japanize : Japanize変換された発言内容
+japanizeLine2Format: '&6[JP] %japanize'
+
+# ノンジャパナイズマーカー。
+# これが発言の頭に入っている場合は、一時的にJapanize変換を実行しない。
+noneJapanizeMarker: '#'
 
 
 # -------------------- tellコマンド設定 --------------------
 
 # /tell や /msg や /r コマンドでプライベートメッセージを送信するときに、
 # 適用されるフォーマット設定。
+# フォーマット設定には、下記のキーワードが使用できます。
+# %sender         : 発言者表示名
+# %senderserver   : 発言者の接続サーバー名
+# %reciever       : 受信者表示名
+# %recieverserver : 受信者の接続サーバー名
+# %msg            : 発言内容（Japanize変換された場合は、Japanize結果を含みます。）
 defaultFormatForPrivateMessage: '&7[%sender@%senderserver > %reciever@%recieverserver] %msg'
 
 
@@ -31,14 +59,29 @@ defaultFormatForPrivateMessage: '&7[%sender@%senderserver > %reciever@%recievers
 # 通常のチャット発言を、他のサーバーにも送信するかどうか。
 # 注意：LunaChatなどで、サーバーローカルにチャンネルチャットを設定している場合、
 #       チャンネルチャットへの発言内容も、全て他のサーバーに送信されてしまいます。
-broadcastChat: false
+broadcastChat: true
 
 # broadcastChat が true のときに、
 # 他のサーバーで表示されるチャットフォーマットの設定。
-broadcastChatFormat: '&d<%sender@%senderserver> &f%msg'
+# フォーマット設定には、下記のキーワードが使用できます。
+# %sender         : 発言者表示名
+# %senderserver   : 発言者の接続サーバー名
+# %date           : 発言した日付（BungeeCordのProxyサーバーのシステム時刻が使用されます）
+# %time           : 発言した時刻（BungeeCordのProxyサーバーのシステム時刻が使用されます）
+# %msg            : 発言内容（Japanize変換された場合は、Japanize結果を含みます。）
+broadcastChatFormat: '%date %time &d<%sender@%senderserver> &f%msg'
 
 # broadcastChat が true のときに、
 # 発言者のサーバーについても、Japanize変換を行うかどうか。
-# 各サーバーで、LunaChatなどJapanize変換を行うプラグインを使用したい場合は、
+# 各サーバーごとで、LunaChatなどのJapanize変換を行うプラグインを使用したい場合は、
 # false にしてください。
 broadcastChatLocalJapanize: true
+
+
+# -------------------- NGワード設定 --------------------
+
+# NGワード設定。正規表現が指定可能です。
+# ここに設定されたワードを発言したプレイヤーは、NGワード部分がマスクされます。
+ngword:
+- 'ちん(こ|ぽ|ちん)'
+
