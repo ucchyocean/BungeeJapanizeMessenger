@@ -42,6 +42,7 @@ public class DictionaryCommand extends Command {
         // パーミッションチェック
         if ( !sender.hasPermission("bungeejapanizemessenger.dictionary") ) {
             sendMessage(sender, "コマンドの実行権限がありません。");
+            return;
         }
 
         if ( args.length >= 3 && args[0].equalsIgnoreCase("add") ) {
