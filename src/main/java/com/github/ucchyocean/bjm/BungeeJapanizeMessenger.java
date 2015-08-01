@@ -214,6 +214,11 @@ public class BungeeJapanizeMessenger extends Plugin implements Listener {
                 }, 150, TimeUnit.MILLISECONDS);
             }
         }
+
+        // コンソールに表示設定なら、コンソールに表示する
+        if ( config.isDisplayChatOnConsole() ) {
+            getLogger().info(message);
+        }
     }
 
     /**

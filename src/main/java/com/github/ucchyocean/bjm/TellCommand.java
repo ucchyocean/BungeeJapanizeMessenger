@@ -136,6 +136,11 @@ public class TellCommand extends Command {
 
         // 送信履歴を記録
         parent.putHistory(reciever.getName(), sender.getName());
+
+        // コンソールに表示設定なら、コンソールに表示する
+        if ( config.isDisplayChatOnConsole() ) {
+            parent.getLogger().info(result);
+        }
     }
 
     /**

@@ -28,6 +28,7 @@ public class BJMConfig {
     private String japanizeLine1Format;
     private String japanizeLine2Format;
     private String noneJapanizeMarker;
+    private boolean displayChatOnConsole;
     private boolean broadcastChat;
     private String broadcastChatFormat;
     private boolean broadcastChatLocalJapanize;
@@ -77,6 +78,8 @@ public class BJMConfig {
                     config.getString("japanizeLine2Format", "&6[JP] %japanize");
 
             noneJapanizeMarker = config.getString("noneJapanizeMarker", "#");
+
+            displayChatOnConsole = config.getBoolean("displayChatOnConsole", true);
 
             broadcastChat = config.getBoolean("broadcastChat", true);
 
@@ -137,6 +140,13 @@ public class BJMConfig {
      */
     public String getNoneJapanizeMarker() {
         return noneJapanizeMarker;
+    }
+
+    /**
+     * @return displayChatOnConsole
+     */
+    public boolean isDisplayChatOnConsole() {
+        return displayChatOnConsole;
     }
 
     /**
