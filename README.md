@@ -123,4 +123,4 @@ ngword:
 ※ 何かあったときの連絡先：<a href="https://twitter.com/ucchy99">ツイッター</a>へ連絡ください。
 
 ※ ダウンロード：<br/>
-https://github.com/ucchyocean/BungeeJapanizeMessenger/blob/master/release/BungeeJapanizeMessenger-1.1.0-dist.zip?raw=true
+https://github.com/ucchyocean/BungeeJapanizeMessenger/blob/master/release/BungeeJapanizeMessenger-1.1.1-dist.zip?raw=true
