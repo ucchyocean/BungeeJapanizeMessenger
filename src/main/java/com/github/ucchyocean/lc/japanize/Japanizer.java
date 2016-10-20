@@ -52,8 +52,8 @@ public class Japanizer {
         // IME変換
         if ( type == JapanizeType.GOOGLE_IME ) {
             japanized = IMEConverter.convByGoogleIME(japanized);
-        } else if ( type == JapanizeType.SOCIAL_IME ) {
-            japanized = IMEConverter.convBySocialIME(japanized);
+//        } else if ( type == JapanizeType.SOCIAL_IME ) {
+//            japanized = IMEConverter.convBySocialIME(japanized);
         }
 
         // キーワードのアンロック

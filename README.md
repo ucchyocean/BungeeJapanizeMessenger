@@ -15,7 +15,7 @@ BungeeCord を利用して複数サーバーを連結している環境におい
 * あらかじめ設定されたNGワードをマスクすることができます。
 
 ※ 使用方法：<b>BungeeCordのpluginsフォルダ</b>に、jarファイルを入れてください。<br/>
-<b>Bukkitのpluginsフォルダではありません！</b>
+<b>Bukkitやspigotのpluginsフォルダではありません！</b>
 
 ※ コマンド：/dictionary (省略形 /dic)
 BungeeCordのパーミッション「bungeejapanizemessenger.dictionary」が無いと、実行できません。
@@ -26,7 +26,7 @@ BungeeCordのパーミッション「bungeejapanizemessenger.dictionary」が無
 
 ※ コンフィグ：plugins/BungeeJapanizeMessenger/config.yml に生成されます。
 <pre>
-# BungeeJapanizeMessenger v1.1.0
+# BungeeJapanizeMessenger v1.2.0
 # @author     ucchy
 # @license    LGPLv3
 # @copyright  Copyright ucchy 2014
@@ -35,11 +35,10 @@ BungeeCordのパーミッション「bungeejapanizemessenger.dictionary」が無
 # -------------------- Japanize変換設定 --------------------
 
 # ローマ字をかな文字や漢字に変換する設定。
-# none/kana/GoogleIME/SocialIME の4つのいずれかが設定可能。
+# none/kana/GoogleIME の3つのいずれかが設定可能。
 # none      : 変換なし。
 # kana      : かな変換のみ。
 # GoogleIME : かな変換したのち、GoogleIMEを使って漢字変換する。
-# SocialIME : かな変換したのち、SocialIMEを使って漢字変換する。
 japanizeType: GoogleIME
 
 # かな変換や漢字変換時に、
@@ -123,4 +122,4 @@ ngword:
 ※ 何かあったときの連絡先：<a href="https://twitter.com/ucchy99">ツイッター</a>へ連絡ください。
 
 ※ ダウンロード：<br/>
-https://github.com/ucchyocean/BungeeJapanizeMessenger/blob/master/release/BungeeJapanizeMessenger-1.1.1-dist.zip?raw=true
+https://github.com/ucchyocean/BungeeJapanizeMessenger/blob/master/release/BungeeJapanizeMessenger-1.2.0-dist.zip?raw=true

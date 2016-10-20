@@ -39,7 +39,9 @@ public class IMEConverter {
      * SocialIMEを使って変換する
      * @param org 変換元
      * @return 変換後
+     * @deprecated SocialIMEが2016年9月1日にサービス終了するため、このAPIは今後呼び出してはならない。
      */
+    @Deprecated
     public static String convBySocialIME(String org) {
         return conv(org, false);
     }
@@ -47,16 +49,20 @@ public class IMEConverter {
     // 変換の実行
     private static String conv(String org, boolean isGoogleIME) {
 
+        if ( org.length() == 0 ) {
+            return "";
+        }
+
         HttpURLConnection urlconn = null;
         BufferedReader reader = null;
         try {
             String baseurl;
             String encode;
             if ( isGoogleIME ) {
-                baseurl = GOOGLE_IME_URL + URLEncoder.encode(org , "UTF-8");;
+                baseurl = GOOGLE_IME_URL + URLEncoder.encode(org , "UTF-8");
                 encode = "UTF-8";
             } else {
-                baseurl = SOCIAL_IME_URL + URLEncoder.encode(org , "UTF-8");;
+                baseurl = SOCIAL_IME_URL + URLEncoder.encode(org , "UTF-8");
                 encode = "EUC_JP";
             }
             URL url = new URL(baseurl);
