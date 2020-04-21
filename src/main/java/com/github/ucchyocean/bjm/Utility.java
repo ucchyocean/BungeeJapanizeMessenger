@@ -59,7 +59,7 @@ public class Utility {
 
             } else {
                 reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-                writer = new BufferedWriter(new OutputStreamWriter(fos));
+                writer = new BufferedWriter(new OutputStreamWriter(fos, "UTF-8"));
 
                 String line;
                 while ((line = reader.readLine()) != null) {
