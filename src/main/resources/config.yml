@@ -39,7 +39,7 @@ japanizeLine2Format: '&6[JP] %japanize'
 # これが発言の頭に入っている場合は、一時的にJapanize変換を実行しない。
 noneJapanizeMarker: '#'
 
-# チャンネルチャットの発言内容を、サーバーコンソールに表示するかどうか
+# チャットの発言内容を、サーバーコンソールに表示するかどうか。
 displayChatOnConsole: true
 
 

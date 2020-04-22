@@ -26,7 +26,7 @@ BungeeCordのパーミッション「bungeejapanizemessenger.dictionary」が無
 
 ※ コンフィグ：plugins/BungeeJapanizeMessenger/config.yml に生成されます。
 <pre>
-# BungeeJapanizeMessenger v1.2.0
+# BungeeJapanizeMessenger v1.2.1
 # @author     ucchy
 # @license    LGPLv3
 # @copyright  Copyright ucchy 2014
@@ -67,7 +67,7 @@ japanizeLine2Format: '&6[JP] %japanize'
 # これが発言の頭に入っている場合は、一時的にJapanize変換を実行しない。
 noneJapanizeMarker: '#'
 
-# チャンネルチャットの発言内容を、サーバーコンソールに表示するかどうか
+# チャットの発言内容を、サーバーコンソールに表示するかどうか。
 displayChatOnConsole: true
 
 
@@ -122,4 +122,4 @@ ngword:
 ※ 何かあったときの連絡先：<a href="https://twitter.com/ucchy99">ツイッター</a>へ連絡ください。
 
 ※ ダウンロード：<br/>
-https://github.com/ucchyocean/BungeeJapanizeMessenger/blob/master/release/BungeeJapanizeMessenger-1.2.0-dist.zip?raw=true
+https://github.com/ucchyocean/BungeeJapanizeMessenger/blob/master/release/BungeeJapanizeMessenger-1.2.1-dist.zip?raw=true
