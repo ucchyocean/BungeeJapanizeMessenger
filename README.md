@@ -1,6 +1,12 @@
 BungeeJapanizeMessenger
 ========================
 
+【このプラグインは、LunaChatに統合されました。】<br/>
+今後は、LunaChat v3 をご利用ください。<br/>
+https://github.com/ucchyocean/LunaChat
+
+<hr/>
+
 BungeeCord を利用して複数サーバーを連結している環境において、サーバーをまたいだチャットやプライベートメッセージの送信を可能にします。
 また、メッセージの内容がローマ字表記の場合は、漢字に変換して表示することが可能です。
 
